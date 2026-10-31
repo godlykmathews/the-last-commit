@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111512">
+  <meta name="description" content="A local archive of the code you left behind.">
+  <title>The Last Commit</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-mark" viewBox="0 0 24 24"><path d="M5 20V10a7 7 0 0 1 14 0v10M3 20h18M9 10h6M12 7v6"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V5h6l2 3h10v11H3Z"/></symbol>
+    <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="6" r="2"/><path d="M6 7v10M18 8c0 6-12 2-12 8"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8ZM14 3v5h5M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .7-1.5 1-1.5 2M12 17h.01"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+    <symbol id="i-ghost" viewBox="0 0 24 24"><path d="M5 20V10a7 7 0 1 1 14 0v10l-3-2-4 2-4-2Z"/><path d="M9 10v2M15 10v2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m5-5-5 5 5 5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="/" aria-label="The Last Commit home"><span class="brand-mark"><svg><use href="#i-mark"/></svg></span><span>The Last Commit<span class="brand-period">.</span></span></a>
+      <div class="header-actions">
+        <button class="model-button" id="model-button" title="Local model settings"><span class="status-dot" id="model-dot"></span><span id="model-label">Local model</span><svg><use href="#i-settings"/></svg></button>
+      </div>
+    </header>
+
+    <div class="repository-bar">
+      <div class="repository-identity"><svg><use href="#i-folder"/></svg><strong id="repo-name">Archive</strong><span class="badge" id="sample-badge" hidden>Example</span><span class="branch"><svg><use href="#i-branch"/></svg><span id="repo-branch">—</span></span></div>
+      <button class="button secondary small" id="open-repo"><svg><use href="#i-folder"/></svg>Open repository</button>
+    </div>
+
+    <main class="workspace" id="workspace">
+      <aside class="sidebar" aria-label="Deleted files">
+        <div class="sidebar-top"><h2>Left behind</h2><span class="count" id="file-count">0</span></div>
+        <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="file-search" placeholder="Find a file…" aria-label="Find a deleted file" autocomplete="off"><kbd>/</kbd></label>
+        <div class="file-list" id="file-list"><p class="list-empty">Opening archive…</p></div>
+        <p class="scan-note" id="scan-note" hidden></p>
+        <div class="sidebar-footer"><span><span class="tiny-dot"></span>Read-only archive</span><button class="icon-button" id="help-button" aria-label="Help" title="Help"><svg><use href="#i-help"/></svg></button></div>
+      </aside>
+
+      <section class="detail" id="detail" aria-label="File history" aria-busy="false">
+        <div class="empty-state" id="empty-state"><svg><use href="#i-mark"/></svg><h1>The archive is opening.</h1></div>
+        <div id="file-detail" hidden>
+          <div class="detail-topline"><button class="mobile-back text-button" id="back-to-files"><svg><use href="#i-back"/></svg>Files</button><span class="eyebrow" id="file-directory"></span><button class="icon-button export-button" id="export-button" aria-label="Export exhibit" title="Export exhibit as HTML"><svg><use href="#i-download"/></svg></button></div>
+          <div class="file-heading"><h1 id="file-name"></h1><span class="removed-label"><span></span>Removed</span></div>
+          <div class="file-stats"><div><span>First commit</span><strong id="first-date">—</strong></div><div><span>Last commit</span><strong id="last-date">—</strong></div><div><span>Revisions</span><strong id="revision-count">—</strong></div></div>
+
+          <section class="story-box" id="story-box" aria-label="AI interpretation">
+            <div class="story-idle" id="story-idle"><span class="ghost-mark"><svg><use href="#i-ghost"/></svg></span><div class="story-prompt"><h2>Every deletion has a history.</h2><p id="story-hint">This one is still here.</p></div><button class="button primary" id="summon-button">Summon story<svg><use href="#i-arrow"/></svg></button></div>
+            <div class="story-loading" id="story-loading" hidden><span class="ghost-mark"><svg><use href="#i-ghost"/></svg></span><div><h2>Reading the traces<span class="loading-dots">…</span></h2><p id="story-progress">You can keep exploring.</p></div><button class="text-button" id="cancel-story">Cancel</button></div>
+            <div id="story-result" hidden><div class="story-result-header"><span><svg><use href="#i-ghost"/></svg>From the archive</span><button class="icon-button" id="regenerate-story" aria-label="Generate story again" title="Generate again"><svg><use href="#i-arrow"/></svg></button></div><div class="story-lines" id="story-lines"></div><div class="story-credit" id="story-credit"></div></div>
+          </section>
+          <p class="inline-error" id="story-error" role="alert" hidden></p>
+
+          <div class="history-toolbar"><div class="tabs" role="tablist" aria-label="History views"><button role="tab" aria-selected="true" aria-controls="timeline-panel" id="timeline-tab" data-view="timeline">Timeline<span id="timeline-count"></span></button><button role="tab" aria-selected="false" aria-controls="code-panel" id="code-tab" data-view="code" tabindex="-1">Last version</button><button role="tab" aria-selected="false" aria-controls="diff-panel" id="diff-tab" data-view="diff" tabindex="-1">Deletion</button></div><span class="history-hash" id="history-hash"></span></div>
+          <div id="timeline-panel" class="tab-panel" role="tabpanel" aria-labelledby="timeline-tab"><div class="timeline" id="timeline"></div></div>
+          <div id="code-panel" class="tab-panel" role="tabpanel" aria-labelledby="code-tab" hidden><div class="code-caption"><span id="code-path"></span><span>Before removal</span></div><pre class="code-view" id="code-view" tabindex="0"></pre></div>
+          <div id="diff-panel" class="tab-panel" role="tabpanel" aria-labelledby="diff-tab" hidden><div class="code-caption"><span>Deletion diff</span><span id="diff-sha"></span></div><pre class="code-view diff-view" id="diff-view" tabindex="0"></pre></div>
+          <p class="truncation-note" id="truncation-note" hidden>Showing a limited excerpt of this file’s history.</p>
+        </div>
+      </section>
+    </main>
+    <footer class="app-footer"><span>A little history. Still on your machine.</span><span id="archive-footer">THE LAST COMMIT</span></footer>
+  </div>
+
+  <dialog id="open-dialog" class="modal"><form id="open-form"><div class="modal-heading"><h2>Open repository</h2><button type="button" class="icon-button" data-close aria-label="Close"><svg><use href="#i-close"/></svg></button></div><label for="repo-path">Local folder</label><input id="repo-path" class="text-input" name="path" placeholder="/Users/you/projects/repository" required autocomplete="off" spellcheck="false"><p class="field-note">Reads Git history. Your files stay untouched.</p><p class="inline-error" id="repo-error" role="alert" hidden></p><div class="modal-actions"><button type="button" class="text-button" id="load-example">Use example</button><button type="submit" class="button primary" id="open-submit">Open archive<svg><use href="#i-arrow"/></svg></button></div></form></dialog>
+
+  <dialog id="help-dialog" class="modal help-modal"><div class="modal-heading"><h2>A few things to know</h2><button class="icon-button" data-close aria-label="Close"><svg><use href="#i-close"/></svg></button></div><div class="help-item"><span>01</span><p>Open a local Git repository. Pick a deleted file to explore its commits and last version.</p></div><div class="help-item"><span>02</span><p><strong>Summon story</strong> asks your local model for a short interpretation. Numbered references open the original evidence.</p></div><div class="help-item"><span>03</span><p>Use the download icon to keep an HTML exhibit. No account, cloud upload, or repository changes.</p></div><p class="help-footnote">The example repository is fictional. Stories are AI interpretations; source quotes are checked, but conclusions can still be wrong. Missing history stays unknown.</p><div class="help-shortcuts"><span><kbd>/</kbd> Find a file</span><span><kbd>Esc</kbd> Close</span></div></dialog>
+
+  <dialog id="model-dialog" class="modal"><div class="modal-heading"><h2>Local model</h2><button class="icon-button" data-close aria-label="Close"><svg><use href="#i-close"/></svg></button></div><label for="model-select">Ollama model</label><select class="text-input" id="model-select"></select><p class="field-note" id="model-note">Checking connection…</p><div id="model-setup" hidden><p class="field-note">Start Ollama, then download a model once:</p><code class="setup-command">ollama pull qwen3:4b</code></div><div class="modal-actions"><span class="field-note">Inference stays local.</span><button class="button secondary" id="refresh-model">Reconnect</button></div></dialog>
+
+  <dialog id="evidence-dialog" class="modal evidence-modal"><div class="modal-heading"><div><span class="eyebrow" id="evidence-kind">Source</span><h2 id="evidence-title"></h2></div><button class="icon-button" data-close aria-label="Close"><svg><use href="#i-close"/></svg></button></div><div class="evidence-meta" id="evidence-meta"></div><pre class="evidence-text" id="evidence-text" tabindex="0"></pre></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>

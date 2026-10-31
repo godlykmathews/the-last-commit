@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { RepositoryStore } from '../lib/git.mjs';
+import { generateStory, getStatus } from '../lib/ollama.mjs';
+import { ensureSampleRepo } from './create-sample.mjs';
+
+const status = await getStatus();
+assert.ok(status.available, 'Start local Ollama with a downloaded chat model first.');
+const store = new RepositoryStore();
+const archive = await store.sample(await ensureSampleRepo());
+const file = archive.files.find(item => item.path === 'src/auth/session-store.ts');
+const detail = await store.details(archive.repository.id, file.id);
+const result = await generateStory({ detail, model: process.env.MODEL || status.model });
+assert.equal(result.story.lines.length, 2);
+const prose = result.story.lines.map(line => line.text).join(' ');
+assert.match(prose, /session/i, 'The story should explain the actual file purpose.');
+assert.match(prose, /signed cookies/i, 'The story should preserve the documented replacement.');
+assert.doesNotMatch(prose, /\bcommit-\d+\b/, 'Internal source labels should not appear in prose.');
+const artifacts = new URL('../artifacts/', import.meta.url);
+await mkdir(artifacts, { recursive: true });
+await writeFile(new URL('live-check.json', artifacts), JSON.stringify({ checkedAt: new Date().toISOString(), ...result }, null, 2) + '\n');
+console.log(JSON.stringify({ model: result.model, durationMs: result.durationMs, lines: result.story.lines.map(line => line.text), artifact: fileURLToPath(new URL('live-check.json', artifacts)) }, null, 2));

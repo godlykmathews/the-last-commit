@@ -1,0 +1,16 @@
+{
+  "name": "the-last-commit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A local museum of deleted code, narrated by an open-weight model.",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "test": "node --test",
+    "test:live": "node scripts/live-check.mjs",
+    "sample": "node scripts/create-sample.mjs"
+  }
+}
